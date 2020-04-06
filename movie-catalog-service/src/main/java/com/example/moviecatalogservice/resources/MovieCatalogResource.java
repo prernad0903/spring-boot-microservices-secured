@@ -23,7 +23,7 @@ public class MovieCatalogResource {
 	@RequestMapping("/{userId}")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
-		UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratings/users/" + userId,
+		UserRating ratings = restTemplate.getForObject("https://ratings-data-service/ratings/users/" + userId,
 				UserRating.class);
 
 		// Get All Rated Movie IDS
@@ -33,7 +33,7 @@ public class MovieCatalogResource {
 		// Put them all together
 
 		return ratings.getUserRating().stream().map(rating -> {
-			Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
+			Movie movie = restTemplate.getForObject("https://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
 			return new CatalogItem(movie.getName(), "", rating.getRating());
 		}).collect(Collectors.toList());
 
