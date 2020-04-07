@@ -1,0 +1,153 @@
+Microsoft Windows [Version 10.0.17134.1365]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32>cd D:\Study\Microservices\Certificates\ssl\bin
+
+C:\WINDOWS\system32>d:
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl genrsa -aes256 -out serverprivate.key 2048
+Loading 'screen' into random state - done
+Generating RSA private key, 2048 bit long modulus
+.............+++
+......................................................................+++
+e is 65537 (0x10001)
+Enter pass phrase for serverprivate.key:
+Verifying - Enter pass phrase for serverprivate.key:
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl req -x509 -new -nodes -key serverprivate.key -sha256 -days 1024 -out serverCA.crt
+Enter pass phrase for serverprivate.key:
+Loading 'screen' into random state - done
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:IN
+State or Province Name (full name) [Some-State]:IN
+Locality Name (eg, city) []:IN
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:IN
+Organizational Unit Name (eg, section) []:IN
+Common Name (eg, YOUR name) []:localhost
+Email Address []:pd@gmail.com
+
+D:\Study\Microservices\Certificates\ssl\bin>keytool -import -file serverCA.crt -alias serverCA -keystore truststore.jks
+Enter keystore password:
+Re-enter new password:
+Owner: EMAILADDRESS=pd@gmail.com, CN=localhost, OU=IN, O=IN, L=IN, ST=IN, C=IN
+Issuer: EMAILADDRESS=pd@gmail.com, CN=localhost, OU=IN, O=IN, L=IN, ST=IN, C=IN
+Serial number: 9a800bee217eed88
+Valid from: Mon Apr 06 11:17:09 IST 2020 until: Wed Jan 25 11:17:09 IST 2023
+Certificate fingerprints:
+         MD5:  73:14:8E:AF:A0:CD:10:58:15:0C:70:25:0C:DB:F7:3D
+         SHA1: 5F:8E:4F:C5:A0:01:F5:A1:65:E9:3A:42:F6:E0:35:52:71:3E:E1:46
+         SHA256: 2B:C0:9E:99:BF:FA:4B:AB:14:56:73:04:2E:BF:F1:BE:4C:F1:71:08:4E:39:F0:73:CD:71:66:AC:C1:C9:BC:4D
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.35 Criticality=false
+AuthorityKeyIdentifier [
+KeyIdentifier [
+0000: 18 7C D8 10 E9 CA 10 A7   A8 42 6A E7 CA A5 D1 23  .........Bj....#
+0010: EE D7 DE 7C                                        ....
+]
+[EMAILADDRESS=pd@gmail.com, CN=localhost, OU=IN, O=IN, L=IN, ST=IN, C=IN]
+SerialNumber: [    9a800bee 217eed88]
+]
+
+#2: ObjectId: 2.5.29.19 Criticality=false
+BasicConstraints:[
+  CA:true
+  PathLen:2147483647
+]
+
+#3: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 18 7C D8 10 E9 CA 10 A7   A8 42 6A E7 CA A5 D1 23  .........Bj....#
+0010: EE D7 DE 7C                                        ....
+]
+]
+
+Trust this certificate? [no]:  yes
+Certificate was added to keystore
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl pkcs12 -export -in serverCA.crt -inkey serverprivate.key -certfile serverCA.crt -out keystore.p12
+Loading 'screen' into random state - done
+Enter pass phrase for serverprivate.key:
+Enter Export Password:
+Verifying - Enter Export Password:
+
+D:\Study\Microservices\Certificates\ssl\bin>keytool -importkeystore -srckeystore keystore.p12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype JKS
+Importing keystore keystore.p12 to keystore.jks...
+Enter destination keystore password:
+Re-enter new password:
+Enter source keystore password:
+Entry for alias 1 successfully imported.
+Import command completed:  1 entries successfully imported, 0 entries failed or cancelled
+
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using "keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12".
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl genrsa -aes256 -out clientprivate.key 2048
+Loading 'screen' into random state - done
+Generating RSA private key, 2048 bit long modulus
+.............+++
+.......+++
+e is 65537 (0x10001)
+Enter pass phrase for clientprivate.key:
+Verifying - Enter pass phrase for clientprivate.key:
+Verify failure
+User interface error
+28876:error:0906906F:PEM routines:PEM_ASN1_write_bio:read key:.\crypto\pem\pem_lib.c:334:
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl genrsa -aes256 -out clientprivate.key 2048
+Loading 'screen' into random state - done
+Generating RSA private key, 2048 bit long modulus
+...................+++
+...............................................................+++
+e is 65537 (0x10001)
+Enter pass phrase for clientprivate.key:
+Verifying - Enter pass phrase for clientprivate.key:
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl req -new -key clientprivate.key -out client.csr
+Enter pass phrase for clientprivate.key:
+Loading 'screen' into random state - done
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:IN
+State or Province Name (full name) [Some-State]:IN
+Locality Name (eg, city) []:IN
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:IN
+Organizational Unit Name (eg, section) []:IN
+Common Name (eg, YOUR name) []:localhost
+Email Address []:pdd@gmail.com
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+
+D:\Study\Microservices\Certificates\ssl\bin>openssl x509 -req -in client.csr -CA serverCA.crt -CAkey serverprivate.key -CAcreateserial -out client.crt -days 365 -sha256
+Loading 'screen' into random state - done
+Signature ok
+subject=/C=IN/ST=IN/L=IN/O=IN/OU=IN/CN=localhost/emailAddress=pdd@gmail.com
+Getting CA Private Key
+Enter pass phrase for serverprivate.key:
+
+D:\Study\Microservices\Certificates\ssl\bin>keytool -importcert -file client.crt -alias selfsigned -keystore "C:\Program Files\Java\jdk1.8.0_181\jre\lib\security\cacerts"
+Enter keystore password:
+Certificate already exists in keystore under alias <mykey>
+Do you still want to add it? [no]:  yes
+Certificate was added to keystore
+
+D:\Study\Microservices\Certificates\ssl\bin>
