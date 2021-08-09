@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+        "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+
+<!-- bean definitions here -->
+
+<bean id="StudentRepository" class="com.sample.repository.StudentRepository">
+<!-- <constructor-arg index="0" value="20"/>
+<constructor-arg index="1" value="0"/> -->
+<property name="limit" value="50"/>
+<property name="offset" value="10"/>
+ </bean>
+
+ <bean id="Student" class="com.sample.dao.Student">
+         <property name="id" value="1"/>
+         <property name="name" value="Prerna"/>
+         <property name="courses">
+                <list>
+                   <ref bean="DS"/> 
+                   <ref bean="ToC"/> 
+                   <ref bean="Java"/>     
+                </list>
+         </property>
+ </bean>
+ <bean id="DS" class="com.sample.dao.Course">
+        <property name="id" value="1"/>
+        <property name="name" value="Data Structures"/>
+</bean>
+<bean id="ToC" class="com.sample.dao.Course">
+        <property name="id" value="2"/>
+        <property name="name" value="Theory of Computing"/>
+</bean>
+<bean id="Java" class="com.sample.dao.Course">
+        <property name="id" value="3"/>
+        <property name="name" value="Core Java"/>
+</bean>
+
+<alias name="StudentRepository" alias="student-data" />
+
+</beans>
